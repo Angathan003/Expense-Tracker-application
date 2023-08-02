@@ -7,14 +7,14 @@ import matplotlib.pyplot as plt
 # Create the expenses table in the database
 def create_table():
     conn.execute("CREATE TABLE IF NOT EXISTS expenses (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                 "amount REAL, category TEXT, date TEXT)")
+                 "amount REAL, category TEXT, date TEXT, description TEXT)")
     conn.commit()
 
 
 # Insert a new expense into the database
-def insert_expense(amount, category, date):
-    conn.execute("INSERT INTO expenses (amount, category, date) VALUES (?, ?, ?)",
-                 (amount, category, date))
+def insert_expense(amount, category, date, description):
+    conn.execute("INSERT INTO expenses (amount, category, date, description) VALUES (?, ?, ?, ?)",
+                 (amount, category, date, description))
     conn.commit()
 
 
@@ -41,12 +41,15 @@ def submit_expense():
     amount = amount_entry.get()
     category = category_entry.get()
     date = date_entry.get()
+    description = description_entry.get()
+
     if amount and category and date:
-        insert_expense(amount, category, date)
+        insert_expense(amount, category, date, description)
         messagebox.showinfo("Expense Tracker", "Expense added successfully.")
         amount_entry.delete(0, tk.END)
         category_entry.delete(0, tk.END)
         date_entry.delete(0, tk.END)
+        description_entry.delete(0, tk.END)
     else:
         messagebox.showwarning("Expense Tracker", "Please fill in all the fields.")
 
@@ -75,6 +78,11 @@ date_label = tk.Label(window, text="Date:")
 date_label.pack()
 date_entry = tk.Entry(window)
 date_entry.pack()
+
+description_label = tk.Label(window, text="Description:")
+description_label.pack()
+description_entry = tk.Entry(window)
+description_entry.pack()
 
 # Create submit and report buttons
 submit_button = tk.Button(window, text="Submit", command=submit_expense)
